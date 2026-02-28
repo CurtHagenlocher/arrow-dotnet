@@ -324,61 +324,29 @@ namespace Apache.Arrow.Variant.Tests
         [Fact]
         public void GetInt32_OnString_Throws()
         {
-            try
-            {
-                VariantReader reader = new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveString_HelloWorld);
-                reader.GetInt32();
-                Assert.Fail("Expected InvalidOperationException");
-            }
-            catch (InvalidOperationException)
-            {
-                // expected
-            }
+            Assert.Throws<InvalidOperationException>(() =>
+                new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveString_HelloWorld).GetInt32());
         }
 
         [Fact]
         public void GetBoolean_OnNull_Throws()
         {
-            try
-            {
-                VariantReader reader = new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveNull);
-                reader.GetBoolean();
-                Assert.Fail("Expected InvalidOperationException");
-            }
-            catch (InvalidOperationException)
-            {
-                // expected
-            }
+            Assert.Throws<InvalidOperationException>(() =>
+                new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveNull).GetBoolean());
         }
 
         [Fact]
         public void GetString_OnInt_Throws()
         {
-            try
-            {
-                VariantReader reader = new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveInt32_100000);
-                reader.GetString();
-                Assert.Fail("Expected InvalidOperationException");
-            }
-            catch (InvalidOperationException)
-            {
-                // expected
-            }
+            Assert.Throws<InvalidOperationException>(() =>
+                new VariantReader(TestVectors.EmptyMetadata, TestVectors.PrimitiveInt32_100000).GetString());
         }
 
         [Fact]
         public void GetInt8_OnObject_Throws()
         {
-            try
-            {
-                VariantReader reader = new VariantReader(TestVectors.EmptyMetadata, TestVectors.ObjectEmpty);
-                reader.GetInt8();
-                Assert.Fail("Expected InvalidOperationException");
-            }
-            catch (InvalidOperationException)
-            {
-                // expected
-            }
+            Assert.Throws<InvalidOperationException>(() =>
+                new VariantReader(TestVectors.EmptyMetadata, TestVectors.ObjectEmpty).GetInt8());
         }
 
         // ---------------------------------------------------------------

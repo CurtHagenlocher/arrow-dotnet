@@ -235,16 +235,8 @@ namespace Apache.Arrow.Variant.Tests
         [Fact]
         public void GetString_IndexTooHigh_Throws()
         {
-            try
-            {
-                VariantMetadata metadata = new VariantMetadata(TestVectors.SortedMetadata_Alpha_Beta_Gamma);
-                _ = metadata.GetString(3);
-                Assert.Fail("Expected ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // expected
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new VariantMetadata(TestVectors.SortedMetadata_Alpha_Beta_Gamma).GetString(3));
         }
     }
 }

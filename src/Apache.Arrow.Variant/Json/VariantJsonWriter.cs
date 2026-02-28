@@ -172,7 +172,6 @@ namespace Apache.Arrow.Variant.Json
                     writer.WriteNumberValue(reader.GetInt64());
                     break;
                 case VariantPrimitiveType.Float:
-                {
                     float f = reader.GetFloat();
                     if (float.IsNaN(f) || float.IsInfinity(f))
                     {
@@ -181,9 +180,7 @@ namespace Apache.Arrow.Variant.Json
                     }
                     writer.WriteNumberValue(f);
                     break;
-                }
                 case VariantPrimitiveType.Double:
-                {
                     double d = reader.GetDouble();
                     if (double.IsNaN(d) || double.IsInfinity(d))
                     {
@@ -192,7 +189,6 @@ namespace Apache.Arrow.Variant.Json
                     }
                     writer.WriteNumberValue(d);
                     break;
-                }
                 case VariantPrimitiveType.Decimal4:
                     writer.WriteNumberValue(reader.GetDecimal4());
                     break;
@@ -206,7 +202,6 @@ namespace Apache.Arrow.Variant.Json
                         writer.WriteRawValue(reader.GetSqlDecimal().ToString());
                     break;
                 case VariantPrimitiveType.Date:
-                {
                     DateTime date = reader.GetDate();
 #if NET8_0_OR_GREATER
                     Span<char> buf = stackalloc char[10]; // "yyyy-MM-dd"
@@ -216,31 +211,26 @@ namespace Apache.Arrow.Variant.Json
                     writer.WriteStringValue(date.ToString("yyyy-MM-dd"));
 #endif
                     break;
-                }
                 case VariantPrimitiveType.Timestamp:
-                {
                     DateTimeOffset ts = reader.GetTimestamp();
 #if NET8_0_OR_GREATER
-                    Span<char> buf = stackalloc char[64];
-                    ts.TryFormat(buf, out int written, "O");
+                    buf = stackalloc char[64];
+                    ts.TryFormat(buf, out written, "O");
                     writer.WriteStringValue(buf.Slice(0, written));
 #else
                     writer.WriteStringValue(ts.ToString("O"));
 #endif
                     break;
-                }
                 case VariantPrimitiveType.TimestampNtz:
-                {
                     DateTime ntz = reader.GetTimestampNtz();
 #if NET8_0_OR_GREATER
-                    Span<char> buf = stackalloc char[64];
-                    ntz.TryFormat(buf, out int written, "O");
+                    buf = stackalloc char[64];
+                    ntz.TryFormat(buf, out written, "O");
                     writer.WriteStringValue(buf.Slice(0, written));
 #else
                     writer.WriteStringValue(ntz.ToString("O"));
 #endif
                     break;
-                }
                 case VariantPrimitiveType.TimeNtz:
                     writer.WriteNumberValue(reader.GetTimeNtzMicros());
                     break;
@@ -257,17 +247,15 @@ namespace Apache.Arrow.Variant.Json
                     writer.WriteStringValue(reader.GetStringBytes());
                     break;
                 case VariantPrimitiveType.Uuid:
-                {
 #if NET8_0_OR_GREATER
                     Guid uuid = reader.GetUuid();
-                    Span<char> buf = stackalloc char[36]; // "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                    uuid.TryFormat(buf, out int written, "D");
+                    buf = stackalloc char[36]; // "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    uuid.TryFormat(buf, out written, "D");
                     writer.WriteStringValue(buf.Slice(0, written));
 #else
                     writer.WriteStringValue(reader.GetUuid().ToString("D"));
 #endif
                     break;
-                }
                 default:
                     throw new NotSupportedException($"Cannot serialize variant type {reader.PrimitiveType} to JSON.");
             }

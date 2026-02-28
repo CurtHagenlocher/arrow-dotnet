@@ -106,33 +106,15 @@ namespace Apache.Arrow.Variant.Tests
         [Fact]
         public void GetElement_OutOfRange_Throws()
         {
-            try
-            {
-                VariantArrayReader arr = new VariantArrayReader(
-                    TestVectors.EmptyMetadata, TestVectors.Array_Int8_1_2_3);
-                arr.GetElement(3);
-                Assert.Fail("Expected ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // expected
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new VariantArrayReader(TestVectors.EmptyMetadata, TestVectors.Array_Int8_1_2_3).GetElement(3));
         }
 
         [Fact]
         public void GetElement_NegativeIndex_Throws()
         {
-            try
-            {
-                VariantArrayReader arr = new VariantArrayReader(
-                    TestVectors.EmptyMetadata, TestVectors.Array_Int8_1_2_3);
-                arr.GetElement(-1);
-                Assert.Fail("Expected ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // expected
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new VariantArrayReader(TestVectors.EmptyMetadata, TestVectors.Array_Int8_1_2_3).GetElement(-1));
         }
     }
 }

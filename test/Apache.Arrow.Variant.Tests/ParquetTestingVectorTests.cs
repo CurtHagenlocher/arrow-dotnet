@@ -61,10 +61,12 @@ namespace Apache.Arrow.Variant.Tests
         public static IEnumerable<object[]> TestCaseNames()
         {
             string variantDir = FindVariantDir();
-            if (variantDir == null) yield break;
-
-            string dictPath = Path.Combine(variantDir, "data_dictionary.json");
-            if (!File.Exists(dictPath)) yield break;
+            string dictPath = variantDir == null ? null : Path.Combine(variantDir, "data_dictionary.json");
+            if (dictPath == null || !File.Exists(dictPath))
+            {
+                yield return new object[] { null };
+                yield break;
+            }
 
             string json = File.ReadAllText(dictPath);
             Dictionary<string, JsonElement> dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json, JsonOptions);
@@ -84,7 +86,7 @@ namespace Apache.Arrow.Variant.Tests
         [MemberData(nameof(TestCaseNames))]
         public void DecodesTestVector(string testCaseName)
         {
-            Skip.If(VariantDir == null, "parquet-testing submodule not checked out");
+            Skip.If(VariantDir == null || testCaseName == null, "parquet-testing submodule not checked out");
 
             Dictionary<string, JsonElement> dictionary = LoadDictionary();
             JsonElement expected = dictionary[testCaseName];

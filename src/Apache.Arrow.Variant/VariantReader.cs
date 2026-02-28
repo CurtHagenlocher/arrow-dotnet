@@ -584,7 +584,6 @@ namespace Apache.Arrow.Variant
                     return VariantValue.FromString(GetString());
 
                 case VariantBasicType.Object:
-                {
                     VariantObjectReader obj = new VariantObjectReader(_metadata, _value);
                     Dictionary<string, VariantValue> fields = new Dictionary<string, VariantValue>(obj.FieldCount);
                     for (int i = 0; i < obj.FieldCount; i++)
@@ -594,10 +593,8 @@ namespace Apache.Arrow.Variant
                         fields[name] = fieldValue.ToVariantValue();
                     }
                     return VariantValue.FromObject(fields);
-                }
 
                 case VariantBasicType.Array:
-                {
                     VariantArrayReader arr = new VariantArrayReader(_metadata, _value);
                     List<VariantValue> elements = new List<VariantValue>(arr.ElementCount);
                     for (int i = 0; i < arr.ElementCount; i++)
@@ -606,7 +603,6 @@ namespace Apache.Arrow.Variant
                         elements.Add(elem.ToVariantValue());
                     }
                     return VariantValue.FromArray(elements);
-                }
 
                 case VariantBasicType.Primitive:
                     return MaterializePrimitive();
@@ -646,10 +642,8 @@ namespace Apache.Arrow.Variant
 #if NET8_0_OR_GREATER
                     return VariantValue.FromFloat(BinaryPrimitives.ReadSingleLittleEndian(data));
 #else
-                {
                     int bits = BinaryPrimitives.ReadInt32LittleEndian(data);
                     return VariantValue.FromFloat(Unsafe.As<int, float>(ref bits));
-                }
 #endif
                 case VariantPrimitiveType.Double:
 #if NET8_0_OR_GREATER
@@ -678,10 +672,8 @@ namespace Apache.Arrow.Variant
                 case VariantPrimitiveType.TimestampNtzNanos:
                     return VariantValue.FromTimestampNtzNanos(BinaryPrimitives.ReadInt64LittleEndian(data));
                 case VariantPrimitiveType.Binary:
-                {
                     int length = BinaryPrimitives.ReadInt32LittleEndian(data);
                     return VariantValue.FromBinary(data.Slice(4, length).ToArray());
-                }
                 case VariantPrimitiveType.String:
                     return VariantValue.FromString(GetString());
                 case VariantPrimitiveType.Uuid:

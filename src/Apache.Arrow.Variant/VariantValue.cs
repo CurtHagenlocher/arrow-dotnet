@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -596,10 +597,15 @@ namespace Apache.Arrow.Variant
             if (IsString) return $"\"{AsString()}\"";
             if (IsObject) return $"{{object with {AsObject().Count} fields}}";
             if (IsArray) return $"[array with {AsArray().Count} elements]";
-            if (_primitiveType == VariantPrimitiveType.Float) return AsFloat().ToString();
-            if (_primitiveType == VariantPrimitiveType.Double) return AsDouble().ToString();
-            if (_objectValue != null) return _objectValue.ToString();
-            return _inlineValue.ToString();
+            if (_primitiveType == VariantPrimitiveType.Float) return AsFloat().ToString(CultureInfo.InvariantCulture);
+            if (_primitiveType == VariantPrimitiveType.Double) return AsDouble().ToString(CultureInfo.InvariantCulture);
+            if (_primitiveType == VariantPrimitiveType.Decimal4 ||
+                _primitiveType == VariantPrimitiveType.Decimal8 ||
+                _primitiveType == VariantPrimitiveType.Decimal16)
+            {
+                return AsSqlDecimal().ToString();
+            }
+            return _inlineValue.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

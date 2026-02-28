@@ -23,4 +23,3 @@
 src/Apache.Arrow/Flatbuf/*
 docs/images/*.png
 docs/images/*.svg
-tests/parquet-testing/*

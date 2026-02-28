@@ -163,33 +163,15 @@ namespace Apache.Arrow.Variant.Tests
         [Fact]
         public void GetFieldValue_OutOfRange_Throws()
         {
-            try
-            {
-                VariantObjectReader obj = new VariantObjectReader(
-                    TestVectors.SortedMetadata_Name, TestVectors.Object_Name_Alice);
-                obj.GetFieldValue(1);
-                Assert.Fail("Expected ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // expected
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new VariantObjectReader(TestVectors.SortedMetadata_Name, TestVectors.Object_Name_Alice).GetFieldValue(1));
         }
 
         [Fact]
         public void GetFieldId_OutOfRange_Throws()
         {
-            try
-            {
-                VariantObjectReader obj = new VariantObjectReader(
-                    TestVectors.SortedMetadata_Name, TestVectors.Object_Name_Alice);
-                obj.GetFieldId(-1);
-                Assert.Fail("Expected ArgumentOutOfRangeException");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // expected
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new VariantObjectReader(TestVectors.SortedMetadata_Name, TestVectors.Object_Name_Alice).GetFieldId(-1));
         }
     }
 }
