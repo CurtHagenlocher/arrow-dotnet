@@ -111,7 +111,6 @@ namespace Apache.Arrow.Variant.Json
                     return;
 
                 case VariantBasicType.Object:
-                {
                     VariantObjectReader obj = new VariantObjectReader(reader.Metadata, reader.Value);
                     writer.WriteStartObject();
                     for (int i = 0; i < obj.FieldCount; i++)
@@ -122,10 +121,8 @@ namespace Apache.Arrow.Variant.Json
                     }
                     writer.WriteEndObject();
                     return;
-                }
 
                 case VariantBasicType.Array:
-                {
                     VariantArrayReader arr = new VariantArrayReader(reader.Metadata, reader.Value);
                     writer.WriteStartArray();
                     for (int i = 0; i < arr.ElementCount; i++)
@@ -135,7 +132,6 @@ namespace Apache.Arrow.Variant.Json
                     }
                     writer.WriteEndArray();
                     return;
-                }
 
                 case VariantBasicType.Primitive:
                     WritePrimitive(writer, reader);

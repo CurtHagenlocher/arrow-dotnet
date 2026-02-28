@@ -580,6 +580,31 @@ namespace Apache.Arrow.Variant
                 return hash;
 #endif
             }
+            // Object: order-independent hash of key/value pairs (consistent with Equals)
+            if (_primitiveType == ObjectSentinel)
+            {
+                Dictionary<string, VariantValue> dict = (Dictionary<string, VariantValue>)_objectValue;
+                int hash = ObjectSentinel.GetHashCode() ^ dict.Count;
+                foreach (KeyValuePair<string, VariantValue> kv in dict)
+                {
+                    // XOR is order-independent, matching unordered dictionary equality
+                    hash ^= kv.Key.GetHashCode() ^ kv.Value.GetHashCode();
+                }
+                return hash;
+            }
+
+            // Array: order-dependent hash of elements (consistent with Equals)
+            if (_primitiveType == ArraySentinel)
+            {
+                List<VariantValue> list = (List<VariantValue>)_objectValue;
+                int hash = ArraySentinel.GetHashCode() ^ list.Count;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    hash = hash * 31 + list[i].GetHashCode();
+                }
+                return hash;
+            }
+
             return _primitiveType.GetHashCode() ^ _objectValue.GetHashCode();
         }
 

@@ -329,6 +329,33 @@ namespace Apache.Arrow.Variant.Tests
                 { "x", VariantValue.FromInt32(1) },
             });
             Assert.Equal(a, b);
+            Assert.Equal(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Fact]
+        public void Equality_Object_Nested()
+        {
+            VariantValue a = VariantValue.FromObject(new Dictionary<string, VariantValue>
+            {
+                { "name", VariantValue.FromString("Alice") },
+                { "scores", VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.FromInt32(2)) },
+            });
+            VariantValue b = VariantValue.FromObject(new Dictionary<string, VariantValue>
+            {
+                { "name", VariantValue.FromString("Alice") },
+                { "scores", VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.FromInt32(2)) },
+            });
+            Assert.Equal(a, b);
+            Assert.Equal(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Fact]
+        public void Equality_Object_Empty()
+        {
+            VariantValue a = VariantValue.FromObject(new Dictionary<string, VariantValue>());
+            VariantValue b = VariantValue.FromObject(new Dictionary<string, VariantValue>());
+            Assert.Equal(a, b);
+            Assert.Equal(a.GetHashCode(), b.GetHashCode());
         }
 
         [Fact]
@@ -337,6 +364,42 @@ namespace Apache.Arrow.Variant.Tests
             VariantValue a = VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.FromInt32(2));
             VariantValue b = VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.FromInt32(2));
             Assert.Equal(a, b);
+            Assert.Equal(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Fact]
+        public void Equality_Array_Empty()
+        {
+            VariantValue a = VariantValue.FromArray(new List<VariantValue>());
+            VariantValue b = VariantValue.FromArray(new List<VariantValue>());
+            Assert.Equal(a, b);
+            Assert.Equal(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Fact]
+        public void HashCode_Object_UsableInHashSet()
+        {
+            VariantValue a = VariantValue.FromObject(new Dictionary<string, VariantValue>
+            {
+                { "key", VariantValue.FromString("value") },
+            });
+            VariantValue b = VariantValue.FromObject(new Dictionary<string, VariantValue>
+            {
+                { "key", VariantValue.FromString("value") },
+            });
+
+            HashSet<VariantValue> set = new HashSet<VariantValue> { a };
+            Assert.Contains(b, set);
+        }
+
+        [Fact]
+        public void HashCode_Array_UsableInHashSet()
+        {
+            VariantValue a = VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.Null);
+            VariantValue b = VariantValue.FromArray(VariantValue.FromInt32(1), VariantValue.Null);
+
+            HashSet<VariantValue> set = new HashSet<VariantValue> { a };
+            Assert.Contains(b, set);
         }
 
         // ---------------------------------------------------------------
@@ -486,3 +549,4 @@ namespace Apache.Arrow.Variant.Tests
         }
     }
 }
+
