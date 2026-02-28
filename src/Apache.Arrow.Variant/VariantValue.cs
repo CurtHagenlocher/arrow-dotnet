@@ -615,22 +615,19 @@ namespace Apache.Arrow.Variant
         public static bool operator !=(VariantValue left, VariantValue right) => !(left == right);
 
         /// <inheritdoc />
-        public override string ToString()
+        public override string ToString() => _primitiveType switch
         {
-            if (IsNull) return "null";
-            if (IsBoolean) return AsBoolean() ? "true" : "false";
-            if (IsString) return $"\"{AsString()}\"";
-            if (IsObject) return $"{{object with {AsObject().Count} fields}}";
-            if (IsArray) return $"[array with {AsArray().Count} elements]";
-            if (_primitiveType == VariantPrimitiveType.Float) return AsFloat().ToString(CultureInfo.InvariantCulture);
-            if (_primitiveType == VariantPrimitiveType.Double) return AsDouble().ToString(CultureInfo.InvariantCulture);
-            if (_primitiveType == VariantPrimitiveType.Decimal4 ||
-                _primitiveType == VariantPrimitiveType.Decimal8 ||
-                _primitiveType == VariantPrimitiveType.Decimal16)
-            {
-                return AsSqlDecimal().ToString();
-            }
-            return _inlineValue.ToString(CultureInfo.InvariantCulture);
-        }
+            VariantPrimitiveType.NullType => "null",
+            VariantPrimitiveType.BooleanTrue => "true",
+            VariantPrimitiveType.BooleanFalse => "false",
+            VariantPrimitiveType.String => $"\"{AsString()}\"",
+            VariantPrimitiveType.Float => AsFloat().ToString(CultureInfo.InvariantCulture),
+            VariantPrimitiveType.Double => AsDouble().ToString(CultureInfo.InvariantCulture),
+            VariantPrimitiveType.Decimal4 or VariantPrimitiveType.Decimal8 => AsDecimal().ToString(CultureInfo.InvariantCulture),
+            VariantPrimitiveType.Decimal16 => AsSqlDecimal().ToString(),
+            ObjectSentinel => $"{{object with {AsObject().Count} fields}}",
+            ArraySentinel => $"[array with {AsArray().Count} elements]",
+            _ => _inlineValue.ToString(CultureInfo.InvariantCulture),
+        };
     }
 }
