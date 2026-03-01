@@ -1238,7 +1238,7 @@ namespace Apache.Arrow.Tests
                     dynamic pyBatch = pa.RecordBatch._import_from_c(arrayPtr, schemaPtr);
                     dynamic pyArray = pyBatch.column(0);
 
-                    // Build the expected UUID array in Python
+                    // Build the expected bool8 array in Python
                     dynamic expectedArray = pa.array(
                         new PyList(new PyObject[]
                         {
