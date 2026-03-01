@@ -22,8 +22,8 @@ using Apache.Arrow.Types;
 namespace Apache.Arrow
 {
     /// <summary>
-    /// Extension definition for the "arrow.uuid" extension type,
-    /// backed by FixedSizeBinary(16).
+    /// Extension definition for the "arrow.bool8" extension type,
+    /// backed by the Int8 storage type.
     /// </summary>
     public class Bool8ExtensionDefinition : ExtensionDefinition
     {

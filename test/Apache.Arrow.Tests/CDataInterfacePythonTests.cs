@@ -1226,37 +1226,42 @@ namespace Apache.Arrow.Tests
             CArrowSchema* cSchema = CArrowSchema.Create();
             CArrowSchemaExporter.ExportSchema(batch.Schema, cSchema);
 
-            long arrayPtr = ((IntPtr)cArray).ToInt64();
-            long schemaPtr = ((IntPtr)cSchema).ToInt64();
-
-            using (Py.GIL())
+            try
             {
-                dynamic pa = Py.Import("pyarrow");
+                long arrayPtr = ((IntPtr)cArray).ToInt64();
+                long schemaPtr = ((IntPtr)cSchema).ToInt64();
 
-                dynamic pyBatch = pa.RecordBatch._import_from_c(arrayPtr, schemaPtr);
-                dynamic pyArray = pyBatch.column(0);
+                using (Py.GIL())
+                {
+                    dynamic pa = Py.Import("pyarrow");
 
-                // Build the expected UUID array in Python
-                dynamic expectedArray = pa.array(
-                    new PyList(new PyObject[]
-                    {
+                    dynamic pyBatch = pa.RecordBatch._import_from_c(arrayPtr, schemaPtr);
+                    dynamic pyArray = pyBatch.column(0);
+
+                    // Build the expected UUID array in Python
+                    dynamic expectedArray = pa.array(
+                        new PyList(new PyObject[]
+                        {
                         PyObject.FromManagedObject(true),
                         PyObject.FromManagedObject(false),
                         PyObject.None,
                         PyObject.FromManagedObject(false),
                         PyObject.FromManagedObject(true),
-                    }),
-                    type: pa.bool8());
+                        }),
+                        type: pa.bool8());
 
-                Assert.True((bool)pyArray.equals(expectedArray));
+                    Assert.True((bool)pyArray.equals(expectedArray));
+                }
             }
-
-            CArrowArray.Free(cArray);
-            CArrowSchema.Free(cSchema);
+            finally
+            {
+                CArrowArray.Free(cArray);
+                CArrowSchema.Free(cSchema);
+            }
         }
 
         [SkippableFact]
-        public unsafe void ImporBool8Array()
+        public unsafe void ImportBool8Array()
         {
             // Create a bool8 array in Python, export it via the C Data Interface,
             // and verify that C# resolves it as a Bool8Array with correct values.
